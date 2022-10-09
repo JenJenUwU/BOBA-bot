@@ -34,3 +34,88 @@ class music_cog(commands.Cog):
             self.music_queue.pop(0)
 
             self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+
+        else:
+            self.is_playing = False
+    async def play_music(self, ctx):
+        if len(self.music_queue) > 0:
+            self.is_playing = True
+            m_url = self.music_queue[0][0]['source']
+
+            if self.vc == None or not self.vc.is_connected():
+                self.vc == await self.music_queue[0][1].connect()
+            
+                if self.vc == None:
+                    await ctx.send("Could not connect to the voice channel")
+                    return
+            else:
+                await self.vc.move_to(self.music_queue[0][1])
+
+            self.music_queue.pop[0]
+
+            self.vc.play(discord.FFmpegPCMAudio(m_url, **self.FFMPEG_OPTIONS), after=lambda e: self.play_next())
+        
+        else:
+            self.is_playing = False
+
+    @commands.command(name="play", aliases=["p", "playing"], help="Play the selected song from youtube")
+    async def play(self, ctx, *args):
+        query = " ".join(args)
+
+        voice_channel = ctx.author.voice.channel
+        if voice_channel is None:
+            await ctx.send("Connect to a voice channel")
+        elif self.is_paused:
+            self.vc.resume()
+        else:
+            song = self.search_yt(query)
+            if type(song) == type(True):
+                await ctx.send("Could not download the song. Incorrect format, try a different keyword")
+            else:
+                await ctx.send("Song added to the queue")
+                self.music_queue.append([song, voice_channel])
+
+                if self.is_playing == False:
+                    await self.play_music(ctx)
+    @commands.command(name="pause", help="Pauses the current song being played")
+    async def pause(self, ctx, *args):
+        if self.is_playing:
+            self.is_playing = False
+            self.is_paused = True
+            self.vc.pause()
+        elif self.is_paused:
+            self.vc.resume()
+    
+    @commands.command(name="resume", aliases=["r"] help="Resumes playing the current song")
+    async def resume(self, ctx, *args):
+        if self.is_paused:
+            self.is_playing = True
+            self.is_paused = False
+            self.vc.resume()
+
+    @commands.command(name="skip", aliases=["s"] help="Skips the song currently playing")
+    async def skip(self, ctx, *args):
+        if self.vc != None and self.vc:
+            self.vc.stop()
+            await self.play_music(ctx)
+
+    @commands.command(name="queue", aliases=["q"] help="Displays all songs currently in queue")
+    async def queue(self,ctx, *args):
+        retval = ""
+
+        for i in range(0, len(self.music_queue)):
+            if i > 4: break
+            retval += self.music_queue[i][0]['title'] + '\n'
+
+        if retval != "":
+            await ctx.send(retval)
+        else:
+            await ctx.send("No music is in the queue")
+
+    @commands.command(name="clear", aliases=["c"] help="Stops the current song and clears the queue")
+    async def clear(self, ctx, *args):
+        if self.vc != None and self.is_playing:
+            self.vc.stop()
+        self.music_queue = []
+        await ctx.send("Music queue cleared")
+    

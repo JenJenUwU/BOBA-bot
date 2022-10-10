@@ -1,8 +1,9 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-from config import TOKEN, prefix
+from config import prefix
 
 bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 
-bot.run(TOKEN)
+#import bot token from github environment secret 
+bot.run(os.environ['TOKEN'])

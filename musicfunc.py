@@ -118,4 +118,3 @@ class music_cog(commands.Cog):
             self.vc.stop()
         self.music_queue = []
         await ctx.send("Music queue cleared")
-    

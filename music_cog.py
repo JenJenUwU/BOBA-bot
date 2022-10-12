@@ -10,5 +10,4 @@ bot = commands.Bot(command_prefix="/")
 
 bot.add_cog(help_cog(bot))
 bot.add_cog(music_cog(bot))
-
-bot.run(os.getenv("TOKEN"))
+bot.run(os.environ("TOKEN"))

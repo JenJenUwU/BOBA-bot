@@ -1,1 +1,4 @@
-discord == 2.0.0
+nextcord
+discord
+wavelink
+dotenv

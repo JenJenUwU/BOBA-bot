@@ -1,9 +1,19 @@
 import discord
-from discord import app_commands
 from discord.ext import commands
-from config import prefix
+from config import botPrefix
+from dotenv import load_dotenv
+import os
+# environment variables
+load_dotenv()
+token = os.getenv("DISCORD_TOKEN")
+bot = commands.Bot(command_prefix=botPrefix, intents=discord.Intents.all())
 
-bot = commands.Bot(command_prefix=prefix, intents=discord.Intents.all())
 
-#import bot token from github environment secret 
-bot.run(os.environ['TOKEN'])
+@bot.event
+async def on_ready():
+    print(f'Logged in as {bot.user} (ID: {bot.user.id})')
+    print('------')
+
+
+# import bot token from github environment secret\
+bot.run(token)

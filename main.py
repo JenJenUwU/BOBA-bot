@@ -1,4 +1,6 @@
+import http
 import os
+import discord
 import nextcord
 import wavelink
 from nextcord.ext import commands
@@ -25,7 +27,7 @@ async def on_wavelink_node_ready(node: wavelink.Node):
 
 async def node_connect():
     await bot.wait_until_ready()
-    await wavelink.NodePool.create_node(bot=bot, host='lava.islantay.tk', port='true', password='AmeliaWatsonisTheBest**!', secure='True')
+    await wavelink.NodePool.create_node(bot=bot, host="lava.devin-dev.xyz", port="3888", password="ayraiscute", https=True)
 
 
 @bot.command()

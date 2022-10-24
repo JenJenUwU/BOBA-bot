@@ -1,5 +1,6 @@
 import http
 import os
+import ssl
 import discord
 import nextcord
 import wavelink
@@ -10,7 +11,9 @@ from dotenv import load_dotenv
 # environment variables
 load_dotenv()
 token = os.getenv("DISCORD_TOKEN")
-bot = commands.Bot(command_prefix=botPrefix, intents=nextcord.Intents.all())
+intents = nextcord.Intents.default()
+intents.message_content = True
+bot = commands.Bot(command_prefix=botPrefix, intents=intents)
 
 
 @bot.event
@@ -27,7 +30,7 @@ async def on_wavelink_node_ready(node: wavelink.Node):
 
 async def node_connect():
     await bot.wait_until_ready()
-    await wavelink.NodePool.create_node(bot=bot, host="lava.devin-dev.xyz", port="3888", password="ayraiscute", https=True)
+    await wavelink.NodePool.create_node(bot=bot, host='node1.gglvxd.tk', port=443, password='free', https=True)
 
 
 @bot.command()
